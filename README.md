@@ -1,5 +1,7 @@
 # Log0
 
+Your Personal AI powered Log Book
+
 TODO
 
 - Clerk
