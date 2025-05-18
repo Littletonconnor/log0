@@ -1,6 +1,8 @@
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import {
   Sidebar,
+  SidebarContent,
+  SidebarGroup,
   SidebarHeader,
   SidebarMenuButton,
   SidebarTrigger,
@@ -8,6 +10,7 @@ import {
 import Link from "next/link";
 import { Log0Logo } from "./icons/log0-logo";
 import { PanelRight } from "lucide-react";
+import { GlobalSearch } from "./global-search";
 
 export function ClientSidebar() {
   return (
@@ -19,7 +22,9 @@ export function ClientSidebar() {
         <SidebarHeader className="flex w-full flex-row justify-between group-data-[collapsible=icon]:flex-col">
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <Log0Logo className="w-8 h-8 rounded-sm" />
+              <div className="bg-foreground rounded-sm">
+                <Log0Logo className="w-8 h-8 rounded-sm" />
+              </div>
               <span className="font-semibold text-foreground group-data-[collapsible=icon]:hidden">
                 Log0
               </span>
@@ -35,6 +40,11 @@ export function ClientSidebar() {
             </SidebarTrigger>
           </SidebarMenuButton>
         </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup className="relative">
+            <GlobalSearch />
+          </SidebarGroup>
+        </SidebarContent>
       </Sidebar>
     </TooltipProvider>
   );
