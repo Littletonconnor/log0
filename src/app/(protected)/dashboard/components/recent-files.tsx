@@ -1,4 +1,4 @@
-import { FileText } from "lucide-react";
+import { ExternalLink, FileText } from "lucide-react";
 import Link from "next/link";
 
 const FILES = [
@@ -38,13 +38,11 @@ export function RecentFiles() {
               key={file.id}
             >
               <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border border-border/40 bg-blue-500/5 text-blue-500">
-                <div className="flex items-center justify-center">
-                  <FileText className="w-4 h-4 transition-transform duration-400 group-hover:rotate-3 group-hover:scale-110" />
-                </div>
+                <FileText className="w-4 h-4 transition-transform duration-400 group-hover:rotate-3 group-hover:scale-110" />
               </div>
               <div className="flex flex-col grow justify-between">
                 <div className="pr-16">
-                  <h3 className="max-w-[400px] truncate font-medium text-base">
+                  <h3 className="max-w-96 truncate font-medium text-base">
                     {file.name}
                   </h3>
                   <p className="text-muted-foreground text-xs">
@@ -59,7 +57,30 @@ export function RecentFiles() {
               </div>
             </Link>
           ) : (
-            <div key={file.id}>I am a resource</div>
+            <a
+              className="group relative flex items-start gap-4 bg-background p-4 transition-colors hover:bg-muted/50"
+              key={file.id}
+              target="_blank"
+              rel="noopener noreferrer"
+              href={`${file.url}`}
+            >
+              <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border border-border/40 bg-purple-500/5 text-purple-500">
+                <ExternalLink className="h-4 w-4 transition-transform duration-400 group-hover:rotate-3 group-hover:scale-110" />
+              </div>
+              <div className="flex flex-col">
+                <h3 className="max-w-96 truncate font-medium text-base">
+                  {file.name}
+                </h3>
+                <p className="max-w-96 truncate text-muted-foreground text-xs">
+                  {file.url}
+                </p>
+              </div>
+              <div className="absolute right-4 bottom-4">
+                <p className="text-xs text-muted-foreground">
+                  {new Date(file.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </a>
           );
         })}
       </div>
