@@ -4,7 +4,6 @@ Your Personal AI powered Log Book
 
 TODO
 
-- Build input in sidebar.
 - Build home link.
 - Setup Upstash
 - Setup Upstash
