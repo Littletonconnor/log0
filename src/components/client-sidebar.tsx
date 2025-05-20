@@ -1,7 +1,16 @@
 "use client";
 
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { FolderOpen, LayoutGrid, PanelRight } from "lucide-react";
+import {
+  ChevronRight,
+  FilePlus,
+  FolderOpen,
+  File,
+  LayoutGrid,
+  PanelRight,
+  FileText,
+  ExternalLink,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GlobalSearch } from "./global-search";
@@ -14,8 +23,17 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarTrigger,
 } from "./ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
+import { DOCUMENTS, RESOURCES } from "@/lib/constants";
 
 export function ClientSidebar() {
   const pathname = usePathname();
@@ -75,15 +93,73 @@ export function ClientSidebar() {
               </SidebarMenuItem>
 
               {/* Documents section */}
-              <SidebarMenuItem>
-                <SidebarMenuButton className="flex w-full items-center">
-                  <FolderOpen />
-                  <span>My documents</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <Collapsible asChild defaultOpen className="w-full">
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className="flex w-full items-center"
+                      tooltip="My documents"
+                    >
+                      <FolderOpen className="w-4 h-4 shrink-0" />
+                      <span>My documents</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {DOCUMENTS.map((document) => (
+                        <SidebarMenuSubItem key={document.id}>
+                          <SidebarMenuSubButton asChild>
+                            <Link
+                              className="flex items-center"
+                              href={`docs/${document.id}`}
+                            >
+                              <span>
+                                <FileText className="size-4 shrink-0" />
+                              </span>
+                              <span className="truncate max-w-52">
+                                {document.name}
+                              </span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
 
               {/* Resources section */}
-              <SidebarMenuItem></SidebarMenuItem>
+              <Collapsible defaultOpen={false}>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      className="flex w-full items-center"
+                      tooltip="My resources"
+                    >
+                      <FolderOpen className="size-4 shrink-0" />
+                      <span>My resources</span>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {RESOURCES.map((resource) => (
+                        <SidebarMenuSubItem key={resource.id}>
+                          <SidebarMenuSubButton asChild>
+                            <a href={resource.url} target="_blank">
+                              <span>
+                                <ExternalLink className="size-4" />
+                              </span>
+                              <span>{resource.name}</span>
+                            </a>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
 
               {/* Log-in/log-out buttons */}
             </SidebarMenu>
