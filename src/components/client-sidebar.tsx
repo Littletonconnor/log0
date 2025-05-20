@@ -1,20 +1,29 @@
 "use client";
 
+import * as React from "react";
+import { useIsClicked } from "@/hooks/use-boolean";
+import { DOCUMENTS, RESOURCES } from "@/lib/constants";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import {
   ChevronRight,
-  FilePlus,
+  ExternalLink,
+  FileText,
   FolderOpen,
-  File,
   LayoutGrid,
   PanelRight,
-  FileText,
-  ExternalLink,
+  Plus,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GlobalSearch } from "./global-search";
 import { Log0Logo } from "./icons/log0-logo";
+import { Button } from "./ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -28,15 +37,16 @@ import {
   SidebarMenuSubItem,
   SidebarTrigger,
 } from "./ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@radix-ui/react-collapsible";
-import { DOCUMENTS, RESOURCES } from "@/lib/constants";
+import { Input } from "./ui/input";
 
 export function ClientSidebar() {
   const pathname = usePathname();
+  const { clicked, setIsClicked, setIsNotClicked } = useIsClicked();
+  const [documentName, setDocumentName] = React.useState("");
+  const [state, formAction, isPending] = React.useActionState(
+    () => console.log("FORM ACTION CLICKED"),
+    undefined,
+  );
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -106,10 +116,53 @@ export function ClientSidebar() {
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="group-data-[collapsible=icon]:mx-0 group-data-[collapsible=icon]:px-0">
+                      {/* Create document input */}
+                      <SidebarMenuItem>
+                        {clicked ? (
+                          <form
+                            action={formAction}
+                            className="relative group-data-[collapsible=icon]:hidden"
+                          >
+                            <SidebarMenuButton asChild>
+                              <Input
+                                className="pr-6"
+                                onChange={(e) =>
+                                  setDocumentName(e.target.value)
+                                }
+                                value={documentName}
+                                autoFocus
+                                placeholder="document name"
+                              />
+                            </SidebarMenuButton>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setDocumentName("");
+                              }}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 group-data-[collapsible=icon]:hidden"
+                            >
+                              <X className="size-4" />
+                            </button>
+                          </form>
+                        ) : (
+                          <SidebarMenuButton asChild>
+                            <Button
+                              className="w-full justify-start group-data-[collapsible=icon]:hidden"
+                              onClick={setIsClicked}
+                              variant="outline"
+                            >
+                              <span>
+                                <Plus className="size-4" />
+                              </span>
+                              <span>New document</span>
+                            </Button>
+                          </SidebarMenuButton>
+                        )}
+                      </SidebarMenuItem>
                       {DOCUMENTS.map((document) => (
-                        <SidebarMenuSubItem key={document.id}>
-                          <SidebarMenuSubButton asChild>
+                        <SidebarMenuItem key={document.id}>
+                          <SidebarMenuButton asChild tooltip={document.name}>
                             <Link
                               className="flex items-center"
                               href={`docs/${document.id}`}
@@ -121,8 +174,8 @@ export function ClientSidebar() {
                                 {document.name}
                               </span>
                             </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
                       ))}
                     </SidebarMenuSub>
                   </CollapsibleContent>
