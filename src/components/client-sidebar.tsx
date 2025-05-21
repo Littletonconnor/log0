@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useIsClicked } from "@/hooks/use-boolean";
 import { DOCUMENTS, RESOURCES } from "@/lib/constants";
 import {
@@ -8,36 +7,47 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
+import {} from "@radix-ui/react-dropdown-menu";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import {
   ChevronRight,
+  Download,
   ExternalLink,
   FileText,
   FolderOpen,
   LayoutGrid,
+  MoreHorizontal,
   PanelRight,
   Plus,
+  Trash,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import * as React from "react";
 import { GlobalSearch } from "./global-search";
 import { Log0Logo } from "./icons/log0-logo";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Input } from "./ui/input";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarTrigger,
 } from "./ui/sidebar";
-import { Input } from "./ui/input";
 
 export function ClientSidebar() {
   const pathname = usePathname();
@@ -107,7 +117,7 @@ export function ClientSidebar() {
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton
-                      className="flex w-full items-center"
+                      className="flex w-full items-center data-[state=open]:pr-2"
                       tooltip="My documents"
                     >
                       <FolderOpen className="w-4 h-4 shrink-0" />
@@ -175,6 +185,29 @@ export function ClientSidebar() {
                               </span>
                             </Link>
                           </SidebarMenuButton>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <SidebarMenuAction>
+                                <MoreHorizontal className="size-4" />
+                              </SidebarMenuAction>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" align="start">
+                              <DropdownMenuGroup>
+                                <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                                  <span>
+                                    <Download className="size-4" />
+                                  </span>
+                                  Export markdown
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                                  <span>
+                                    <Trash className="size-4" />
+                                  </span>
+                                  Delete document
+                                </DropdownMenuItem>
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </SidebarMenuItem>
                       ))}
                     </SidebarMenuSub>
@@ -182,12 +215,12 @@ export function ClientSidebar() {
                 </SidebarMenuItem>
               </Collapsible>
 
-              {/* Resources section */}
+              {/* === Resources section === */}
               <Collapsible defaultOpen={false}>
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton
-                      className="flex w-full items-center"
+                      className="flex w-full items-center data-[state=open]:px-2"
                       tooltip="My resources"
                     >
                       <FolderOpen className="size-4 shrink-0" />
@@ -196,25 +229,42 @@ export function ClientSidebar() {
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="group-data-[collapsible=icon]:mx-0 group-data-[collapsible=icon]:px-0">
                       {RESOURCES.map((resource) => (
-                        <SidebarMenuSubItem key={resource.id}>
-                          <SidebarMenuSubButton asChild>
+                        <SidebarMenuItem key={resource.id}>
+                          <SidebarMenuButton asChild tooltip={resource.name}>
                             <a href={resource.url} target="_blank">
                               <span>
                                 <ExternalLink className="size-4" />
                               </span>
                               <span>{resource.name}</span>
                             </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
+                          </SidebarMenuButton>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <SidebarMenuAction>
+                                <MoreHorizontal className="size-4" />
+                              </SidebarMenuAction>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" align="start">
+                              <DropdownMenuGroup>
+                                <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                                  <span>
+                                    <Trash className="size-4" />
+                                  </span>
+                                  Delete resource
+                                </DropdownMenuItem>
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </SidebarMenuItem>
                       ))}
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
 
-              {/* Log-in/log-out buttons */}
+              {/* === Log-in/log-out buttons === */}
             </SidebarMenu>
           </SidebarGroup>
         </SidebarContent>
