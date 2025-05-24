@@ -4,7 +4,7 @@ Your Personal AI powered Log Book
 
 TODO
 
-- Setup Documents Page
+- Update form action to write directly to JSON file on disk.
 - Sidebar: Deleting documents
 - Sidebar: Exporting resources
 - Build home link.

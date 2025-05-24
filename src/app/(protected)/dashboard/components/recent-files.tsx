@@ -1,6 +1,9 @@
-import { FILES } from "@/lib/constants";
+import DOCUMENTS from "../../../db/documents.json";
+import RESOURCES from "../../../db/resources.json";
 import { ExternalLink, FileText } from "lucide-react";
 import Link from "next/link";
+
+const FILES = [...DOCUMENTS, ...RESOURCES];
 
 export function RecentFiles() {
   return (

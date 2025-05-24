@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Resource 1",
+    "id": "3",
+    "url": "https://wealthfront.com",
+    "createdAt": "2023-10-03",
+    "type": "resource"
+  },
+  {
+    "name": "Resource 2",
+    "id": "4",
+    "url": "https://wealthfront.com",
+    "createdAt": "2023-11-03",
+    "type": "resource"
+  }
+]
