@@ -1,7 +1,6 @@
 "use client";
 
 import { useIsClicked } from "@/hooks/use-boolean";
-import { DOCUMENTS, RESOURCES } from "@/lib/constants";
 import {
   Collapsible,
   CollapsibleContent,
@@ -49,7 +48,11 @@ import {
   SidebarTrigger,
 } from "./ui/sidebar";
 
-export function ClientSidebar() {
+interface ClientSidebarProps {
+  documents: any;
+  resources: any;
+}
+export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
   const pathname = usePathname();
   const { clicked, setIsClicked, setIsNotClicked } = useIsClicked();
   const [documentName, setDocumentName] = React.useState("");
@@ -170,7 +173,7 @@ export function ClientSidebar() {
                           </SidebarMenuButton>
                         )}
                       </SidebarMenuItem>
-                      {DOCUMENTS.map((document) => (
+                      {documents.map((document) => (
                         <SidebarMenuItem key={document.id}>
                           <SidebarMenuButton asChild tooltip={document.name}>
                             <Link
@@ -230,7 +233,7 @@ export function ClientSidebar() {
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub className="group-data-[collapsible=icon]:mx-0 group-data-[collapsible=icon]:px-0">
-                      {RESOURCES.map((resource) => (
+                      {resources.map((resource) => (
                         <SidebarMenuItem key={resource.id}>
                           <SidebarMenuButton asChild tooltip={resource.name}>
                             <a href={resource.url} target="_blank">
