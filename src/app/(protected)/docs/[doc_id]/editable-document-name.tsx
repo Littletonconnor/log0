@@ -24,11 +24,11 @@ export function EditableDocumentName({ document }: EditableDocumentNameProps) {
 
   return (
     <form className="mb-2" action={formAction} aria-label="Edit Document Name">
-      <input type="hidden" name="documentId" value={document.id} />
+      <input type="hidden" name="id" value={document.id} />
       <Input
         aria-label="Document name"
         defaultValue={document.name}
-        name="documentName"
+        name="name"
         onKeyDown={handleKeyDown}
         className="!text-2xl h-8 border-none bg-transparent p-0 font-semibold focus-visible:ring-0"
       />
