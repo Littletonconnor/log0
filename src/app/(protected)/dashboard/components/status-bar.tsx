@@ -1,7 +1,9 @@
+import DOCUMENTS from "../../../db/documents.json";
+import RESOURCES from "../../../db/resources.json";
+
 export function StatusBar() {
-  // TODO: make these dynamic
-  const referenceCount = 1;
-  const documentCount = 2;
+  const referenceCount = DOCUMENTS.length;
+  const documentCount = RESOURCES.length;
   const userName = "Connor Littleton";
 
   return (

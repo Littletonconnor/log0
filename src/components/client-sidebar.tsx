@@ -178,7 +178,7 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
                           <SidebarMenuButton asChild tooltip={document.name}>
                             <Link
                               className="flex items-center"
-                              href={`docs/${document.id}`}
+                              href={`/docs/${document.id}`}
                             >
                               <span>
                                 <FileText className="size-4 shrink-0" />

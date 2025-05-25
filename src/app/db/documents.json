@@ -1,9 +1,9 @@
 [
   {
-    "name": "File 1!!",
+    "name": "Testing File!!",
     "id": "1",
-    "createdAt": "2023-10-01",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "createdAt": "2025-05-25T22:08:45.014Z",
+    "content": "This is some test content.\r\n\r\nThis is some separate test content. Now I am updating it in real time. Does this cursor get replaced? Sometimes it does and sometimes it does not. This is a test document.",
     "type": "document"
   },
   {
