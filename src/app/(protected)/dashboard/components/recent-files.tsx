@@ -13,7 +13,7 @@ export function RecentFiles() {
           return file.type === "document" ? (
             <Link
               className="group relative flex items-start gap-4 bg-background p-4 transition-colors hover:bg-muted/50"
-              href={`/documents/${file.id}`}
+              href={`/docs/${file.id}`}
               key={file.id}
             >
               <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-sm border border-border/40 bg-blue-500/5 text-blue-500">

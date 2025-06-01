@@ -5,8 +5,9 @@ import fs from "fs/promises";
 import path from "path";
 import { z } from "zod";
 import DOCUMENTS from "../db/documents.json";
+import { revalidatePath } from "next/cache";
 
-type CreateDocumentActionState = ActionState<
+type UpdateDocumentActionState = ActionState<
   {
     name: string;
   },
@@ -16,9 +17,9 @@ type CreateDocumentActionState = ActionState<
 >;
 
 export async function updateDocumentName(
-  prevState: CreateDocumentActionState | undefined,
+  prevState: UpdateDocumentActionState | undefined,
   formData: FormData,
-): Promise<CreateDocumentActionState> {
+): Promise<UpdateDocumentActionState> {
   const rawFormData = Object.fromEntries(formData.entries());
 
   const formSchema = z.object({
@@ -29,7 +30,7 @@ export async function updateDocumentName(
   const parsed = formSchema.safeParse(rawFormData);
 
   if (!parsed.success) {
-    return { success: false, error: parsed.error.message };
+    return { success: false, error: parsed.error.issues[0].message };
   }
 
   const { id } = parsed.data;
@@ -41,13 +42,65 @@ export async function updateDocumentName(
 
   try {
     DOCUMENTS[documentIndex].name = parsed.data.name;
+    DOCUMENTS[documentIndex].createdAt = new Date().toISOString();
     const filePath = path.join(process.cwd(), "src/app/db/documents.json");
     await fs.writeFile(filePath, JSON.stringify(DOCUMENTS, null, 2), "utf8");
+    revalidatePath(`/docs/${id}`);
     return { success: true };
   } catch (e: unknown) {
     return {
       success: false,
-      error: (e as Error).message || "Failed to update document name",
+      error: (e as Error).message || "Failed to update document name.",
     };
   }
+}
+
+type CreateDocumentActionState = ActionState<
+  {
+    name: string;
+  },
+  {
+    documentId: string;
+  }
+>;
+
+export async function updateDocumentContent(
+  prevState: CreateDocumentActionState | undefined,
+  formData: FormData,
+): Promise<CreateDocumentActionState> {
+  const rawFormData = Object.fromEntries(formData.entries());
+  console.log("rawFormData", rawFormData);
+
+  const schema = z.object({
+    id: z.string(),
+    content: z.string(),
+  });
+
+  const parsed = schema.safeParse(rawFormData);
+
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0].message };
+  }
+
+  const { id, content } = parsed.data;
+
+  const documentIndex = DOCUMENTS.findIndex((doc) => doc.id === id);
+  if (documentIndex === -1) {
+    return { success: false, error: "Document not found" };
+  }
+
+  try {
+    DOCUMENTS[documentIndex].content = content;
+    DOCUMENTS[documentIndex].createdAt = new Date().toISOString();
+    const filepath = path.join(process.cwd(), "src/app/db/documents.json");
+    await fs.writeFile(filepath, JSON.stringify(DOCUMENTS, null, 2), "utf-8");
+    revalidatePath(`/docs/${id}`);
+    return { success: true };
+  } catch (e: unknown) {
+    return {
+      success: false,
+      error: (e as Error).message || "Failed to update document content.",
+    };
+  }
+  return { success: true };
 }
