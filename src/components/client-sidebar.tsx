@@ -1,7 +1,8 @@
 "use client";
 
-import { deleteDocument } from "@/app/actions/docs";
+import { createDocument, deleteDocument } from "@/app/actions/docs";
 import { useIsClicked } from "@/hooks/use-boolean";
+import { Document, Resource } from "@/lib/utils";
 import {
   Collapsible,
   CollapsibleContent,
@@ -49,7 +50,6 @@ import {
   SidebarMenuSub,
   SidebarTrigger,
 } from "./ui/sidebar";
-import { Document, Resource } from "@/lib/utils";
 
 interface ClientSidebarProps {
   documents: Document[];
@@ -63,10 +63,20 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
   const { clicked, setIsClicked } = useIsClicked();
   const [isDocumentDeletePending, startDocumentDeleteTransition] =
     React.useTransition();
-  const [state, formAction, isPending] = React.useActionState(
-    () => console.log("FORM ACTION CLICKED"),
+  const [state, formAction, isCreatingDocument] = React.useActionState(
+    createDocument,
     undefined,
   );
+
+  React.useEffect(() => {
+    if (state?.success) {
+      console.log("state", state);
+      toast.success("Document created successfully");
+      router.push(`/docs/${state.data?.documentId}`);
+      setDocumentName("");
+      setIsClicked();
+    }
+  }, [state?.success]);
 
   const handleDeleteDocument = async (documentId: string) => {
     if (!window.confirm("Are you sure you want to delete this document?")) {
@@ -170,18 +180,27 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
                                   setDocumentName(e.target.value)
                                 }
                                 value={documentName}
+                                name="name"
                                 autoFocus
+                                disabled={isCreatingDocument}
                                 placeholder="document name"
                               />
                             </SidebarMenuButton>
                             <button
+                              type="button"
                               onClick={(e) => {
+                                console.log("clicked");
                                 e.preventDefault();
                                 setDocumentName("");
                               }}
-                              className="absolute right-2 top-1/2 -translate-y-1/2 group-data-[collapsible=icon]:hidden"
+                              disabled={isCreatingDocument}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 group-data-[collapsible=icon]:hidden disabled:opacity-50"
                             >
-                              <X className="size-4" />
+                              {isCreatingDocument ? (
+                                <Loader2 className="size-4 animate-spin" />
+                              ) : (
+                                <X className="size-4" />
+                              )}
                             </button>
                           </form>
                         ) : (

@@ -18,6 +18,7 @@ export type Document = {
   content: string;
   createdAt: string;
   updatedAt: string;
+  type: "document";
 };
 
 export type Resource = {
@@ -26,4 +27,5 @@ export type Resource = {
   url: string;
   description: string;
   createdAt: string;
+  type: "resource";
 };
