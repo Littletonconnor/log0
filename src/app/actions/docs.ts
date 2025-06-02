@@ -65,11 +65,10 @@ type CreateDocumentActionState = ActionState<
 >;
 
 export async function updateDocumentContent(
-  prevState: CreateDocumentActionState | undefined,
+  _: CreateDocumentActionState | undefined,
   formData: FormData,
 ): Promise<CreateDocumentActionState> {
   const rawFormData = Object.fromEntries(formData.entries());
-  console.log("rawFormData", rawFormData);
 
   const schema = z.object({
     id: z.string(),
@@ -102,5 +101,34 @@ export async function updateDocumentContent(
       error: (e as Error).message || "Failed to update document content.",
     };
   }
-  return { success: true };
+}
+
+type DeleteDocumentResult = {
+  success: boolean;
+  error?: string;
+};
+
+export async function deleteDocument(
+  id: string,
+): Promise<DeleteDocumentResult> {
+  const documentIndex = DOCUMENTS.findIndex((d) => d.id === id);
+
+  if (documentIndex === -1) {
+    return { success: false };
+  }
+
+  try {
+    DOCUMENTS.splice(documentIndex, 1);
+    const filePath = path.join(process.cwd(), "src/app/db/documents.json");
+    await fs.writeFile(filePath, JSON.stringify(DOCUMENTS, null, 2), "utf-8");
+
+    revalidatePath("/dashboard");
+    revalidatePath("/docs");
+    return { success: true };
+  } catch (e: unknown) {
+    return {
+      success: false,
+      error: (e as Error).message || "Failed to delete document.",
+    };
+  }
 }
