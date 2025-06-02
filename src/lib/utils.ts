@@ -11,3 +11,19 @@ export type ActionState<T = unknown, S = unknown> = {
   form?: T;
   data?: S;
 };
+
+export type Document = {
+  id: string;
+  name: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Resource = {
+  id: string;
+  name: string;
+  url: string;
+  description: string;
+  createdAt: string;
+};

@@ -1,12 +1,12 @@
 "use client";
 
+import { deleteDocument } from "@/app/actions/docs";
 import { useIsClicked } from "@/hooks/use-boolean";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import {} from "@radix-ui/react-dropdown-menu";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import {
   ChevronRight,
@@ -15,6 +15,7 @@ import {
   FileText,
   FolderOpen,
   LayoutGrid,
+  Loader2,
   MoreHorizontal,
   PanelRight,
   Plus,
@@ -22,8 +23,9 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
+import { toast } from "sonner";
 import { GlobalSearch } from "./global-search";
 import { Log0Logo } from "./icons/log0-logo";
 import { Button } from "./ui/button";
@@ -47,19 +49,43 @@ import {
   SidebarMenuSub,
   SidebarTrigger,
 } from "./ui/sidebar";
+import { Document, Resource } from "@/lib/utils";
 
 interface ClientSidebarProps {
-  documents: any;
-  resources: any;
+  documents: Document[];
+  resources: Resource[];
 }
 export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
   const pathname = usePathname();
-  const { clicked, setIsClicked, setIsNotClicked } = useIsClicked();
+  const router = useRouter();
+
   const [documentName, setDocumentName] = React.useState("");
+  const { clicked, setIsClicked } = useIsClicked();
+  const [isDocumentDeletePending, startDocumentDeleteTransition] =
+    React.useTransition();
   const [state, formAction, isPending] = React.useActionState(
     () => console.log("FORM ACTION CLICKED"),
     undefined,
   );
+
+  const handleDeleteDocument = async (documentId: string) => {
+    if (!window.confirm("Are you sure you want to delete this document?")) {
+      return;
+    }
+
+    startDocumentDeleteTransition(async () => {
+      const result = await deleteDocument(documentId);
+      if (result.success) {
+        toast.success(`Document successfully deleted`);
+        if (pathname === `/docs/${documentId}`) {
+          router.push("/dashboard");
+        }
+        router.refresh();
+      } else {
+        toast.error(result.error);
+      }
+    });
+  };
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -202,9 +228,19 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
                                   </span>
                                   Export markdown
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleDeleteDocument(document.id)
+                                  }
+                                  disabled={isDocumentDeletePending}
+                                  className="cursor-pointer flex items-center gap-2"
+                                >
                                   <span>
-                                    <Trash className="size-4" />
+                                    {isDocumentDeletePending ? (
+                                      <Loader2 className="size-4 animate-spin" />
+                                    ) : (
+                                      <Trash className="size-4" />
+                                    )}
                                   </span>
                                   Delete document
                                 </DropdownMenuItem>
