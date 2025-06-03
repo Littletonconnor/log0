@@ -12,7 +12,6 @@ import * as React from "react";
 import { QuickActionButton } from "./quick-action-button";
 import { createResource } from "@/app/actions/resources";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 
 export function NewResource() {
