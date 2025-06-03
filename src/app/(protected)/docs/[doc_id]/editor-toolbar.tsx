@@ -17,13 +17,10 @@ export function EditorToolbar() {
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "j") {
-        const bodyTag = document.querySelector("body");
-        if (bodyTag) {
-          const zen = bodyTag.dataset.zen;
-          bodyTag.dataset.zen = zen === "off" ? "on" : !zen ? "on" : "off";
-        }
+        toggleZenMode();
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -32,7 +29,10 @@ export function EditorToolbar() {
   }, []);
 
   return (
-    <div className="absolute left-1/2 -translate-x-1/2 max-w-98 bottom-0 w-full flex items-center justify-center px-4 z-10 group-data-[zen=on]:hidden">
+    <div
+      data-slot="editor-toolbar"
+      className="absolute left-1/2 -translate-x-1/2 max-w-98 bottom-0 w-full flex items-center justify-center px-4 z-10 group-data-[zen=on]:hidden"
+    >
       <div className="flex w-full flex-col items-center justify-center rounded-lg border bg-background/80 shadow-sm backdrop-blur-sm">
         <div className="flex w-full items-center justify-center gap-2 px-4 py-2">
           <Tooltip>
@@ -63,14 +63,7 @@ export function EditorToolbar() {
                   aria-label="Toggle Zen Mode"
                   size="icon"
                   variant="outline"
-                  onClick={() => {
-                    const bodyTag = document.querySelector("body");
-                    if (bodyTag) {
-                      const zen = bodyTag.dataset.zen;
-                      bodyTag.dataset.zen =
-                        zen === "off" ? "on" : !zen ? "on" : "off";
-                    }
-                  }}
+                  onClick={toggleZenMode}
                   className="size-8 hover:bg-foreground/10 data-[state=on]:hover:bg-foreground/10"
                 >
                   <Focus className="size-4" />
@@ -90,4 +83,17 @@ export function EditorToolbar() {
       </div>
     </div>
   );
+}
+
+function toggleZenMode() {
+  const sidebarContainer = document.querySelector(
+    '[data-slot="sidebar-container"]',
+  );
+  const editorToolbar = document.querySelector('[data-slot="editor-toolbar"]');
+  if (sidebarContainer) {
+    sidebarContainer.classList.toggle("hidden!");
+  }
+  if (editorToolbar) {
+    editorToolbar.classList.toggle("hidden!");
+  }
 }
