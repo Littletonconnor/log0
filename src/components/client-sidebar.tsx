@@ -69,14 +69,14 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
   );
 
   React.useEffect(() => {
+    console.log("State", state);
     if (state?.success) {
-      console.log("state", state);
       toast.success("Document created successfully");
       router.push(`/docs/${state.data?.documentId}`);
       setDocumentName("");
       setIsClicked();
     }
-  }, [state?.success]);
+  }, [state, router]);
 
   const handleDeleteDocument = async (documentId: string) => {
     if (!window.confirm("Are you sure you want to delete this document?")) {
@@ -189,7 +189,6 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
                             <button
                               type="button"
                               onClick={(e) => {
-                                console.log("clicked");
                                 e.preventDefault();
                                 setDocumentName("");
                               }}

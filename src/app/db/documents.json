@@ -8,35 +8,11 @@
     "type": "document"
   },
   {
-    "name": "A Really long file name that should go on and on and on and on and on and on and on and on and on",
-    "id": "2",
-    "createdAt": "2023-10-02",
-    "updatedAt": "2025-06-01T23:59:43.587Z",
-    "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "type": "document"
-  },
-  {
-    "id": "286d6a5a-6158-45a9-b13d-11e8fc067c64",
-    "name": "A fancy header",
-    "content": "",
-    "createdAt": "2025-06-02T13:24:43.741Z",
-    "updatedAt": "2025-06-02T13:24:43.741Z",
-    "type": "document"
-  },
-  {
     "id": "c56ff82b-5c44-43f7-9de1-4c765b2e9b3b",
     "name": "Testing",
     "content": "",
     "createdAt": "2025-06-02T13:25:11.310Z",
     "updatedAt": "2025-06-02T13:25:11.310Z",
-    "type": "document"
-  },
-  {
-    "id": "9a436d74-3472-48c7-8065-8df4b7fc1582",
-    "name": "6",
-    "content": "",
-    "createdAt": "2025-06-02T13:27:39.998Z",
-    "updatedAt": "2025-06-02T13:27:39.998Z",
     "type": "document"
   }
 ]

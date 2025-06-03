@@ -4,6 +4,12 @@ Your Personal AI powered Log Book
 
 ## TODO
 
+Misc
+
+- Clear input once you submit a new document.
+- Build out resources dialog and new dialog.
+- Edit Resource
+
 Sidebar
 
 - Creating new document

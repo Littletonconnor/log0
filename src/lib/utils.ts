@@ -25,7 +25,6 @@ export type Resource = {
   id: string;
   name: string;
   url: string;
-  description: string;
   createdAt: string;
   type: "resource";
 };
