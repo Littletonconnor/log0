@@ -2,13 +2,12 @@
 
 import { updateDocumentName } from "@/app/actions/docs";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, type Document } from "@/lib/utils";
 import * as React from "react";
 import { toast } from "sonner";
-import DOCUMENTS from "../../../db/documents.json";
 
 interface EditableDocumentNameProps {
-  document: (typeof DOCUMENTS)[0];
+  document: Document;
 }
 
 export function EditableDocumentName({ document }: EditableDocumentNameProps) {

@@ -1,20 +1,19 @@
 "use client";
 
 import { updateDocumentContent } from "@/app/actions/docs";
+import { type Document } from "@/lib/utils";
 import * as React from "react";
-import DOCUMENTS from "../../../db/documents.json";
 
 interface EditableTextProps {
-  document: (typeof DOCUMENTS)[0];
+  document: Document;
 }
 
-export function EditableText({ document }: EditableTextProps) {
+export function EditableTextArea({ document }: EditableTextProps) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const [input, setInput] = React.useState(document.content);
-
   const [, formAction] = React.useActionState(updateDocumentContent, undefined);
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
