@@ -1,0 +1,121 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Drizzle ORM Rules
+
+Rules for maintaining consistent Drizzle schema definitions and migrations.
+
+<rule>
+name: drizzle_schema_conventions
+description: Enforces best practices for Drizzle schema definitions and migrations
+filters:
+  # Match TypeScript files
+  - type: file_extension
+    pattern: "\\.ts$"
+  # Match files that look like Drizzle schemas
+  - type: content
+    pattern: "import.*drizzle-orm.*"
+
+actions:
+  - type: suggest
+    conditions:
+      # Check for table names not in snake_case
+      - pattern: "createTable\\(['\"](mdc:[^_a-z][^'\"]*|.*[A-Z].*)['\"]"
+        message: "Table names should be in snake_case format"
+
+      # Check for missing table descriptions
+      - pattern: "createTable\\([^)]+\\)\\s*\\{[^}]*\\}"
+        not: "\\.description\\(['\"][^'\"]+['\"]\\)"
+        message: "Add a description to your table using .description() for better documentation"
+
+      # Check for missing timestamps
+      - pattern: "createTable\\([^)]+\\)\\s*\\{[^}]*\\}"
+        not: "created_at|updated_at"
+        message: "Consider adding created_at and updated_at timestamp columns for audit tracking"
+
+      # Check for missing primary keys
+      - pattern: "createTable\\([^)]+\\)\\s*\\{[^}]*\\}"
+        not: "\\.primaryKey\\("
+        message: "Every table should have a primary key defined"
+
+    message: |
+      When creating Drizzle schemas:
+
+      1. Table Naming:
+         - Use snake_case for table names
+         - Use plural form for table names (users, posts, comments)
+         Example:
+         ```typescript
+         export const users = pgTable('users', {
+           // columns
+         });
+         ```
+
+      2. Column Best Practices:
+         - Add created_at and updated_at timestamps
+         - Use descriptive column names in snake_case
+         - Add appropriate indexes
+         Example:
+         ```typescript
+         export const posts = pgTable('posts', {
+           id: serial('id').primaryKey(),
+           title: text('title').notNull(),
+           content: text('content'),
+           created_at: timestamp('created_at').defaultNow().notNull(),
+           updated_at: timestamp('updated_at').defaultNow().notNull(),
+         });
+         ```
+
+      3. Relations:
+         - Use consistent foreign key naming: {table_name}_id
+         - Add appropriate foreign key constraints
+         Example:
+         ```typescript
+         export const comments = pgTable('comments', {
+           id: serial('id').primaryKey(),
+           post_id: integer('post_id').references(() => posts.id),
+         });
+         ```
+
+      4. Migrations:
+         - Keep migrations atomic and focused
+         - Use descriptive migration names
+         - Include both up and down migrations
+         Example:
+         ```typescript
+         export async function up(db: Database) {
+           await db.schema
+             .createTable('users')
+             .execute();
+         }
+
+         export async function down(db: Database) {
+           await db.schema
+             .dropTable('users')
+             .execute();
+         }
+         ```
+
+examples:
+  - input: |
+      // Bad: Incorrect table naming and missing timestamps
+      export const UserPosts = pgTable('UserPosts', {
+        id: serial('id').primaryKey(),
+        title: text('title'),
+      });
+
+      // Good: Following conventions
+      export const user_posts = pgTable('user_posts', {
+        id: serial('id').primaryKey(),
+        title: text('title').notNull(),
+        created_at: timestamp('created_at').defaultNow().notNull(),
+        updated_at: timestamp('updated_at').defaultNow().notNull(),
+      }).description('Stores user posts and their metadata');
+    output: "Correctly defined Drizzle schema"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>
