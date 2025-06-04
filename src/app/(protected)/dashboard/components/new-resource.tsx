@@ -25,11 +25,8 @@ export function NewResource() {
   React.useEffect(() => {
     if (state?.success) {
       setOpen(!open);
-      console.log("state", state);
-    } else {
-      console.log("state", state);
     }
-  }, [state]);
+  }, [open, state]);
 
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>

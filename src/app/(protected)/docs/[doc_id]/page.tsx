@@ -23,10 +23,10 @@ export default async function DocsPage({ params }: PageProps) {
       <div className="relative flex h-full w-full max-w-4xl flex-col">
         <EditableDocumentName document={document} />
         <time
-          dateTime={document.createdAt}
+          dateTime={document.updatedAt}
           className="text-muted-foreground text-xs mb-2"
         >
-          Updated at {new Date(document.createdAt).toLocaleString()}
+          Updated at {new Date(document.updatedAt).toLocaleString()}
         </time>
         <EditableText document={document} />
         <EditorToolbar />

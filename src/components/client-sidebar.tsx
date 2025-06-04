@@ -69,7 +69,6 @@ export function ClientSidebar({ documents, resources }: ClientSidebarProps) {
   );
 
   React.useEffect(() => {
-    console.log("State", state);
     if (state?.success) {
       toast.success("Document created successfully");
       router.push(`/docs/${state.data?.documentId}`);

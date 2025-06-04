@@ -29,10 +29,8 @@ export function NewDocument() {
     if (state?.success) {
       setOpen(false);
       router.push(`/docs/${state.data?.documentId}`);
-    } else {
-      setOpen(true);
     }
-  }, [state]);
+  }, [router, state]);
 
   return (
     <Dialog open={open} onOpenChange={() => setOpen(!open)}>
@@ -72,7 +70,6 @@ function NewDocumentDialog({
       <DialogDescription>
         Create a new document to start writing.
       </DialogDescription>
-
       <form className="flex flex-col gap-4" action={formAction}>
         <fieldset className="flex flex-col gap-2">
           <Label htmlFor="name">New Document</Label>

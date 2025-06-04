@@ -12,23 +12,13 @@ export function EditableText({ document }: EditableTextProps) {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-  const [cursorPosition, setCursorPosition] = React.useState<number | null>(
-    null,
-  );
+
+  const [input, setInput] = React.useState(document.content);
+
   const [, formAction] = React.useActionState(updateDocumentContent, undefined);
 
-  React.useEffect(() => {
-    if (textareaRef.current && cursorPosition === -1) {
-      textareaRef.current.selectionStart = textareaRef.current.selectionEnd =
-        textareaRef.current.value.length;
-    }
-  }, [cursorPosition]);
-
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    return;
-
-    const newCursorPosition = e.target.selectionStart;
-    setCursorPosition(newCursorPosition);
+    setInput(e.target.value);
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -61,7 +51,7 @@ export function EditableText({ document }: EditableTextProps) {
         className="h-[calc(100%-2rem)] w-full flex-1 resize-none whitespace-pre-wrap bg-transparent font-serif text-base outline-none placeholder:text-muted-foreground/50"
         onKeyDown={handleKeyDown}
         onChange={handleInput}
-        defaultValue={document.content}
+        value={input}
         style={{
           caretColor: "var(--primary)",
         }}

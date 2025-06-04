@@ -89,10 +89,10 @@ export async function updateDocumentContent(
 
   try {
     DOCUMENTS[documentIndex].content = content;
-    DOCUMENTS[documentIndex].createdAt = new Date().toISOString();
+    DOCUMENTS[documentIndex].updatedAt = new Date().toISOString();
     const filepath = path.join(process.cwd(), "src/app/db/documents.json");
     await fs.writeFile(filepath, JSON.stringify(DOCUMENTS, null, 2), "utf-8");
-    revalidatePath(`/docs/${id}`);
+    revalidatePath(`/docs/${id}`, "layout");
     return { success: true };
   } catch (e: unknown) {
     return {
