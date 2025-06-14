@@ -1,13 +1,13 @@
 "use client";
+
 import { updateDocumentName } from "@/app/actions/docs";
 import { Input } from "@/components/ui/input";
-import DOCUMENTS from "../../../db/documents.json";
+import { cn, type Document } from "@/lib/utils";
 import * as React from "react";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface EditableDocumentNameProps {
-  document: (typeof DOCUMENTS)[0];
+  document: Document;
 }
 
 export function EditableDocumentName({ document }: EditableDocumentNameProps) {
@@ -18,9 +18,7 @@ export function EditableDocumentName({ document }: EditableDocumentNameProps) {
   );
 
   React.useEffect(() => {
-    if (state?.success) {
-      toast.success("Document name updated");
-    } else if (state?.error) {
+    if (state?.error) {
       toast.error(state?.error);
     }
   }, [state]);

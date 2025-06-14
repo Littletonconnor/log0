@@ -1,5 +1,5 @@
-import DOCUMENTS from "../../../db/documents.json";
-import RESOURCES from "../../../db/resources.json";
+import DOCUMENTS from "../../../../db/documents.json";
+import RESOURCES from "../../../../db/resources.json";
 
 export function StatusBar() {
   const referenceCount = DOCUMENTS.length;

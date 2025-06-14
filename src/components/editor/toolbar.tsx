@@ -10,7 +10,7 @@ import {
 import { Focus, Sparkles } from "lucide-react";
 import * as React from "react";
 
-export function EditorToolbar() {
+export function EditableToolbar() {
   const [isAutocompleteToggled, setIsAutocompleteToggled] =
     React.useState(false);
 
@@ -31,7 +31,7 @@ export function EditorToolbar() {
   return (
     <div
       data-slot="editor-toolbar"
-      className="absolute left-1/2 -translate-x-1/2 max-w-98 bottom-0 w-full flex items-center justify-center px-4 z-10 group-data-[zen=on]:hidden"
+      className="absolute left-1/2 -translate-x-1/2 max-w-98 bottom-0 w-full flex items-center justify-center px-4 z-10"
     >
       <div className="flex w-full flex-col items-center justify-center rounded-lg border bg-background/80 shadow-sm backdrop-blur-sm">
         <div className="flex w-full items-center justify-center gap-2 px-4 py-2">
@@ -85,15 +85,22 @@ export function EditorToolbar() {
   );
 }
 
+// Probably needs to be refactored at some point... But good enough for now.
 function toggleZenMode() {
   const sidebarContainer = document.querySelector(
     '[data-slot="sidebar-container"]',
   );
   const editorToolbar = document.querySelector('[data-slot="editor-toolbar"]');
+  const editorFindAndReplace = document.querySelector(
+    '[data-slot="editor-find-replace"]',
+  );
   if (sidebarContainer) {
     sidebarContainer.classList.toggle("hidden!");
   }
   if (editorToolbar) {
     editorToolbar.classList.toggle("hidden!");
+  }
+  if (editorFindAndReplace) {
+    editorFindAndReplace.classList.toggle("hidden!");
   }
 }
