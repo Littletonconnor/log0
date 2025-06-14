@@ -1,7 +1,7 @@
 import { Editor } from "@/components/editor";
 import { type Document } from "@/lib/utils";
 import { redirect } from "next/navigation";
-import DOCUMENTS from "../../../db/documents.json";
+import DOCUMENTS from "../../../../db/documents.json";
 
 interface PageProps {
   params: Promise<{ doc_id: string }>;

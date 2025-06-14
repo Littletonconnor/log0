@@ -5,7 +5,7 @@ import fs from "fs/promises";
 import { revalidatePath } from "next/cache";
 import path from "path";
 import { z } from "zod";
-import DOCUMENTS from "../db/documents.json";
+import DOCUMENTS from "../../db/documents.json";
 
 type CreateDocumentActionState = ActionState<
   {

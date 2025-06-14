@@ -1,7 +1,7 @@
 import { ExternalLink, FileText } from "lucide-react";
 import Link from "next/link";
-import DOCUMENTS from "../../../db/documents.json";
-import RESOURCES from "../../../db/resources.json";
+import DOCUMENTS from "../../../../db/documents.json";
+import RESOURCES from "../../../../db/resources.json";
 
 export function RecentFiles() {
   const documents = [...DOCUMENTS];

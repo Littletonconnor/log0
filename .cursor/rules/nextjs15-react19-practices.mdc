@@ -1,0 +1,159 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Next.js 15 and React 19 Best Practices
+
+Rules for maintaining modern Next.js 15 and React 19 code patterns with emphasis on Server Actions and Forms.
+
+<rule>
+name: nextjs15_react19_conventions
+description: Enforces best practices for Next.js 15 and React 19 development
+filters:
+  # Match TypeScript/TSX files in app directory
+  - type: file_extension
+    pattern: "\\.(tsx|ts)$"
+  - type: path
+    pattern: "^app/"
+
+actions:
+  - type: suggest
+    conditions:
+      # Detect client-side form submissions
+      - pattern: "const.*=.*useForm\\(|e\\.preventDefault\\(\\)"
+        not: "use server"
+        message: "Prefer Server Actions with form submissions instead of client-side handling"
+
+      # Detect useState where useFormState might be better
+      - pattern: "useState.*form"
+        not: "useFormState"
+        message: "Consider using useFormState for form state management with Server Actions"
+
+      # Check for proper 'use client' directive
+      - pattern: "useState|useEffect|useCallback|useMemo"
+        not: "'use client'"
+        message: "Client-side hooks require 'use client' directive at the top of the file"
+
+      # Detect improper data fetching
+      - pattern: "fetch\\(|useEffect.*fetch"
+        not: "use server"
+        message: "Prefer Server Components and Server Actions for data fetching"
+
+      # Check for proper async component marking
+      - pattern: "fetch|sql|db\\."
+        not: "async function|async const"
+        message: "Components with async operations should be marked async"
+
+    message: |
+      Next.js 15 and React 19 Best Practices:
+
+      1. Server Components (Default):
+         ```typescript
+         // app/posts/page.tsx
+         async function PostsPage() {
+           const posts = await db.query.posts.findMany();
+           return (
+             <ul>
+               {posts.map(post => <li key={post.id}>{post.title}</li>)}
+             </ul>
+           );
+         }
+         ```
+
+      2. Server Actions with Forms:
+         ```typescript
+         // app/actions.ts
+         'use server'
+
+         export async function createPost(formData: FormData) {
+           const title = formData.get('title');
+           await db.insert(posts).values({ title });
+         }
+
+         // app/posts/new/page.tsx
+         export default function NewPost() {
+           return (
+             <form action={createPost}>
+               <input name="title" />
+               <button type="submit">Create</button>
+             </form>
+           );
+         }
+         ```
+
+      3. Form State Management:
+         ```typescript
+         'use client'
+
+         export function PostForm() {
+           const [state, formAction] = useFormState(createPost, initialState);
+           return (
+             <form action={formAction}>
+               {state.error && <p>{state.error}</p>}
+               <input name="title" />
+             </form>
+           );
+         }
+         ```
+
+      4. Client Components (When Needed):
+         ```typescript
+         'use client'
+
+         export function InteractiveComponent() {
+           const [state, setState] = useState();
+           // Client-side logic here
+         }
+         ```
+
+      Key Guidelines:
+      - Keep components Server-first by default
+      - Use Server Actions for data mutations
+      - Leverage native form handling
+      - Move client-side logic to specific 'use client' components
+      - Use React Suspense for loading states
+      - Implement proper error boundaries
+      - Use route handlers for API needs
+
+examples:
+  - input: |
+      // Bad: Client-side form handling
+      export function BadForm() {
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          fetch('/api/posts', { method: 'POST' });
+        };
+        return <form onSubmit={handleSubmit}>{/* ... */}</form>;
+      }
+
+      // Good: Server Action form handling
+      export function GoodForm() {
+        return (
+          <form action={createPost}>
+            <input name="title" />
+            <button type="submit">Create</button>
+          </form>
+        );
+      }
+    output: "Correctly implemented Next.js 15 form handling"
+
+  - input: |
+      // Bad: Client-side data fetching
+      export function BadComponent() {
+        useEffect(() => {
+          fetch('/api/data').then(/*...*/);
+        }, []);
+      }
+
+      // Good: Server Component data fetching
+      export async function GoodComponent() {
+        const data = await db.query.items.findMany();
+        return <div>{/* render data */}</div>;
+      }
+    output: "Correct server-first data fetching approach"
+
+metadata:
+  priority: high
+  version: 1.0
+</rule>

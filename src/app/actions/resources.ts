@@ -2,7 +2,7 @@
 
 import { Resource } from "@/lib/utils";
 import z from "zod";
-import RESOURCES from "../db/resources.json";
+import RESOURCES from "../../db/resources.json";
 import path from "path";
 import fs from "fs/promises";
 
